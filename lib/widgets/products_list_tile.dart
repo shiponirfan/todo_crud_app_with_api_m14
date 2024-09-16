@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_crud_app_with_api_m14/screens/update_product.dart';
 
 class ProductsListTile extends StatelessWidget {
   const ProductsListTile({
@@ -91,11 +92,16 @@ class ProductsListTile extends StatelessWidget {
                   children: [
                     Card(
                       child: TextButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const UpdateProduct(),
+                              ));
+                        },
                         label: const Text(
                           'Edit',
-                          style: TextStyle(
-                              color: Colors.orange, fontSize: 18),
+                          style: TextStyle(color: Colors.orange, fontSize: 18),
                         ),
                         icon: const Icon(
                           Icons.edit,
@@ -108,8 +114,8 @@ class ProductsListTile extends StatelessWidget {
                         onPressed: () {},
                         label: const Text(
                           'Delete',
-                          style: TextStyle(
-                              color: Colors.deepOrange, fontSize: 18),
+                          style:
+                              TextStyle(color: Colors.deepOrange, fontSize: 18),
                         ),
                         icon: const Icon(
                           Icons.delete,

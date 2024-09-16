@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_crud_app_with_api_m14/screens/add_product.dart';
 import 'package:todo_crud_app_with_api_m14/widgets/products_list_tile.dart';
 
 class ProductList extends StatefulWidget {
@@ -28,6 +29,17 @@ class _ProductListState extends State<ProductList> {
               );
             },
             itemCount: 10),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddProduct(),
+              ));
+        },
+        label: const Text('Add Product'),
+        icon: const Icon(Icons.add),
       ),
     );
   }
