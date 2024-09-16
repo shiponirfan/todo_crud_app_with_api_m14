@@ -62,6 +62,7 @@ class _ProductListState extends State<ProductList> {
                     itemBuilder: (context, index) {
                       return ProductsListTile(
                         product: productList[index],
+                        onTapDeleteButton: onTapDeleteProduct,
                       );
                     },
                     separatorBuilder: (context, index) {
@@ -112,5 +113,21 @@ class _ProductListState extends State<ProductList> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<void> onTapDeleteProduct(String getId) async {
+    Uri uri =
+        Uri.parse('http://164.68.107.70:6060/api/v1/DeleteProduct/$getId');
+    Response response = await get(uri);
+    print(getId);
+    print(response);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      setState(() {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Product Deleted')));
+        getProductList();
+      });
+    }
   }
 }

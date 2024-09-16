@@ -6,9 +6,11 @@ class ProductsListTile extends StatelessWidget {
   const ProductsListTile({
     super.key,
     required this.product,
+    required this.onTapDeleteButton,
   });
 
   final Product product;
+  final Function onTapDeleteButton;
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +41,19 @@ class ProductsListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 Text(
+                Text(
                   product.productName,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
-                 Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       product.productCode,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -59,7 +61,7 @@ class ProductsListTile extends StatelessWidget {
                     ),
                     Text(
                       product.unitPrice,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -67,12 +69,12 @@ class ProductsListTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                 Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       product.qty,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -80,7 +82,7 @@ class ProductsListTile extends StatelessWidget {
                     ),
                     Text(
                       product.totalPrice,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -115,7 +117,7 @@ class ProductsListTile extends StatelessWidget {
                     ),
                     Card(
                       child: TextButton.icon(
-                        onPressed: () {},
+                        onPressed: () => onTapDeleteButton(product.id),
                         label: const Text(
                           'Delete',
                           style:
