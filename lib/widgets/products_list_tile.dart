@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:todo_crud_app_with_api_m14/moduls/product.dart';
 import 'package:todo_crud_app_with_api_m14/screens/update_product.dart';
 
 class ProductsListTile extends StatelessWidget {
   const ProductsListTile({
     super.key,
+    required this.product,
   });
+
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class ProductsListTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               // Optional: For rounded corners
               child: Image.network(
-                'https://shop.adarbepari.com/wp-content/uploads/2024/09/bangladesh-tshirt-backside-design.jpg',
+                product.productImage,
                 fit: BoxFit.cover,
               ),
             ),
@@ -35,18 +39,18 @@ class ProductsListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Product Name',
+                 Text(
+                  product.productName,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
-                const Row(
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Product Code',
+                      product.productCode,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -54,7 +58,7 @@ class ProductsListTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Unit Price',
+                      product.unitPrice,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -63,11 +67,11 @@ class ProductsListTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Row(
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'QTY',
+                      product.qty,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -75,7 +79,7 @@ class ProductsListTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Total Price',
+                      product.totalPrice,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
