@@ -30,7 +30,9 @@ class ProductsListTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               // Optional: For rounded corners
               child: Image.network(
-                product.productImage.toString().contains('http') ? product.productImage : 'https://www.aaronfaber.com/wp-content/uploads/2017/03/product-placeholder-wp.jpg',
+                product.productImage.toString().contains('http')
+                    ? product.productImage
+                    : 'https://www.aaronfaber.com/wp-content/uploads/2017/03/product-placeholder-wp.jpg',
                 fit: BoxFit.cover,
               ),
             ),

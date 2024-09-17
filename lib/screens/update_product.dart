@@ -205,7 +205,8 @@ class _UpdateProductState extends State<UpdateProduct> {
       "Qty": _productQtyTEController.text,
       "TotalPrice": _productTotalPriceTEController.text,
     };
-    Uri uri = Uri.parse('http://164.68.107.70:6060/api/v1/UpdateProduct/${widget.product.id}');
+    Uri uri = Uri.parse(
+        'http://164.68.107.70:6060/api/v1/UpdateProduct/${widget.product.id}');
     Response response = await post(uri,
         headers: {'Content-Type': 'Application/json'},
         body: jsonEncode(requestBody));

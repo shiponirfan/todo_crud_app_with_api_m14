@@ -59,7 +59,6 @@ class _ProductListState extends State<ProductList> {
                     ),
                   ))
                 : ListView.separated(
-                    reverse: true,
                     itemBuilder: (context, index) {
                       return ProductsListTile(
                         product: productList[index],
