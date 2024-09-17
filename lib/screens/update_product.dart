@@ -1,25 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:todo_crud_app_with_api_m14/moduls/product.dart';
 
 class UpdateProduct extends StatefulWidget {
-  const UpdateProduct({super.key});
+  const UpdateProduct({super.key, required this.product});
+
+  final Product product;
 
   @override
   State<UpdateProduct> createState() => _UpdateProductState();
 }
 
 class _UpdateProductState extends State<UpdateProduct> {
-  final TextEditingController _productNameTEController =
-  TextEditingController();
-  final TextEditingController _productCodeTEController =
-  TextEditingController();
-  final TextEditingController _productImageTEController =
-  TextEditingController();
-  final TextEditingController _productUnitPriceTEController =
-  TextEditingController();
-  final TextEditingController _productQtyTEController = TextEditingController();
-  final TextEditingController _productTotalPriceTEController =
-  TextEditingController();
-  final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+  late TextEditingController _productNameTEController = TextEditingController();
+  late TextEditingController _productCodeTEController = TextEditingController();
+  late TextEditingController _productImageTEController =
+      TextEditingController();
+  late TextEditingController _productUnitPriceTEController =
+      TextEditingController();
+  late TextEditingController _productQtyTEController = TextEditingController();
+  late TextEditingController _productTotalPriceTEController =
+      TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _productNameTEController =
+        TextEditingController(text: widget.product.productName);
+    _productCodeTEController =
+        TextEditingController(text: widget.product.productCode);
+    _productImageTEController =
+        TextEditingController(text: widget.product.productImage);
+    _productUnitPriceTEController =
+        TextEditingController(text: widget.product.unitPrice);
+    _productQtyTEController = TextEditingController(text: widget.product.qty);
+    _productTotalPriceTEController =
+        TextEditingController(text: widget.product.totalPrice);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +50,14 @@ class _UpdateProductState extends State<UpdateProduct> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: _buildProductForm(),
+        child: SingleChildScrollView(child: _buildProductForm()),
       ),
     );
   }
 
   Widget _buildProductForm() {
     return Form(
-        key: globalKey,
+        key: _formKey,
         child: Column(
           children: [
             TextFormField(
@@ -143,24 +164,59 @@ class _UpdateProductState extends State<UpdateProduct> {
             ),
             Container(
               width: double.infinity,
+              height: 60,
               decoration: const BoxDecoration(
                   color: Colors.orangeAccent,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: TextButton(
-                  onPressed: _onTapAddProductButton,
-                  child: const Text(
-                    'Update Product',
-                    style: TextStyle(
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
                       color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  )),
+                    ))
+                  : TextButton(
+                      onPressed: _onTapUpdateProductButton,
+                      child: const Text(
+                        'Update Product',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      )),
             )
           ],
         ));
   }
 
-  void _onTapAddProductButton() {}
+  void _onTapUpdateProductButton() {
+    if (_formKey.currentState!.validate()) {
+      updateProduct();
+    }
+  }
+
+  Future<void> updateProduct() async {
+    setState(() {
+      isLoading = true;
+    });
+    Map<String, dynamic> requestBody = {
+      "ProductName": _productNameTEController.text,
+      "ProductCode": _productCodeTEController.text,
+      "Img": _productImageTEController.text,
+      "UnitPrice": _productUnitPriceTEController.text,
+      "Qty": _productQtyTEController.text,
+      "TotalPrice": _productTotalPriceTEController.text,
+    };
+    Uri uri = Uri.parse('http://164.68.107.70:6060/api/v1/UpdateProduct/${widget.product.id}');
+    Response response = await post(uri,
+        headers: {'Content-Type': 'Application/json'},
+        body: jsonEncode(requestBody));
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Product Updated')));
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   void dispose() {

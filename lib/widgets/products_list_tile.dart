@@ -7,10 +7,12 @@ class ProductsListTile extends StatelessWidget {
     super.key,
     required this.product,
     required this.onTapDeleteButton,
+    required this.getProductList,
   });
 
   final Product product;
   final Function onTapDeleteButton;
+  final Function getProductList;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +25,12 @@ class ProductsListTile extends StatelessWidget {
         children: [
           SizedBox(
             width: 100,
-            height: 120,
+            height: 140,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               // Optional: For rounded corners
               child: Image.network(
-                product.productImage,
+                product.productImage.toString().contains('http') ? product.productImage : 'https://www.aaronfaber.com/wp-content/uploads/2017/03/product-placeholder-wp.jpg',
                 fit: BoxFit.cover,
               ),
             ),
@@ -52,7 +54,7 @@ class ProductsListTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      product.productCode,
+                      'Code: ${product.productCode}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -60,7 +62,7 @@ class ProductsListTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      product.unitPrice,
+                      'Unit Price: ${product.unitPrice}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -73,7 +75,7 @@ class ProductsListTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      product.qty,
+                      'Qty: ${product.qty}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -81,7 +83,7 @@ class ProductsListTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      product.totalPrice,
+                      'Total Price: ${product.totalPrice}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -102,8 +104,12 @@ class ProductsListTile extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const UpdateProduct(),
-                              ));
+                                builder: (context) => UpdateProduct(
+                                  product: product,
+                                ),
+                              )).then((_) {
+                            getProductList();
+                          });
                         },
                         label: const Text(
                           'Edit',

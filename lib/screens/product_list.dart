@@ -59,10 +59,12 @@ class _ProductListState extends State<ProductList> {
                     ),
                   ))
                 : ListView.separated(
+                    reverse: true,
                     itemBuilder: (context, index) {
                       return ProductsListTile(
                         product: productList[index],
                         onTapDeleteButton: onTapDeleteProduct,
+                        getProductList: getProductList,
                       );
                     },
                     separatorBuilder: (context, index) {
@@ -78,7 +80,9 @@ class _ProductListState extends State<ProductList> {
               context,
               MaterialPageRoute(
                 builder: (context) => const AddProduct(),
-              ));
+              )).then((_) {
+            getProductList();
+          });
         },
         label: const Text('Add Product'),
         icon: const Icon(Icons.add),
@@ -100,14 +104,15 @@ class _ProductListState extends State<ProductList> {
           id: item['_id'] ?? '',
           productName: item['ProductName'] ?? '',
           productCode: item['ProductCode'] ?? '',
-          productImage: item['img'].toString().contains('http')
-              ? item['img']
-              : 'https://www.aaronfaber.com/wp-content/uploads/2017/03/product-placeholder-wp.jpg',
+          productImage: item['Img'] ?? '',
           unitPrice: item['UnitPrice'] ?? '',
           qty: item['Qty'] ?? '',
           totalPrice: item['TotalPrice'] ?? '',
         );
         productList.add(product);
+        setState(() {
+          isLoading = false;
+        });
       }
     }
     setState(() {
@@ -119,9 +124,6 @@ class _ProductListState extends State<ProductList> {
     Uri uri =
         Uri.parse('http://164.68.107.70:6060/api/v1/DeleteProduct/$getId');
     Response response = await get(uri);
-    print(getId);
-    print(response);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
         ScaffoldMessenger.of(context)

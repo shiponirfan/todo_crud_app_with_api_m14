@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -19,7 +22,8 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _productQtyTEController = TextEditingController();
   final TextEditingController _productTotalPriceTEController =
       TextEditingController();
-  final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +33,14 @@ class _AddProductState extends State<AddProduct> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: _buildProductForm(),
+        child: SingleChildScrollView(child: _buildProductForm()),
       ),
     );
   }
 
   Widget _buildProductForm() {
     return Form(
-        key: globalKey,
+        key: _formKey,
         child: Column(
           children: [
             TextFormField(
@@ -143,24 +147,69 @@ class _AddProductState extends State<AddProduct> {
             ),
             Container(
               width: double.infinity,
+              height: 60,
               decoration: const BoxDecoration(
                   color: Colors.orangeAccent,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: TextButton(
-                  onPressed: _onTapAddProductButton,
-                  child: const Text(
-                    'Add Product',
-                    style: TextStyle(
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
                       color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  )),
+                    ))
+                  : TextButton(
+                      onPressed: _onTapAddProductButton,
+                      child: const Text(
+                        'Add Product',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      )),
             )
           ],
         ));
   }
 
-  void _onTapAddProductButton() {}
+  void _onTapAddProductButton() {
+    if (_formKey.currentState!.validate()) {
+      addNewProduct();
+    }
+  }
+
+  Future<void> addNewProduct() async {
+    setState(() {
+      isLoading = true;
+    });
+    Map<String, dynamic> requestBody = {
+      "ProductName": _productNameTEController.text,
+      "ProductCode": _productCodeTEController.text,
+      "Img": _productImageTEController.text,
+      "UnitPrice": _productUnitPriceTEController.text,
+      "Qty": _productQtyTEController.text,
+      "TotalPrice": _productTotalPriceTEController.text,
+    };
+    Uri uri = Uri.parse('http://164.68.107.70:6060/api/v1/CreateProduct');
+    Response response = await post(uri,
+        headers: {'Content-Type': 'Application/json'},
+        body: jsonEncode(requestBody));
+    if (response.statusCode == 200) {
+      _clearTextField();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('New Product Added')));
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void _clearTextField() {
+    _productNameTEController.clear();
+    _productCodeTEController.clear();
+    _productImageTEController.clear();
+    _productUnitPriceTEController.clear();
+    _productQtyTEController.clear();
+    _productTotalPriceTEController.clear();
+  }
 
   @override
   void dispose() {
